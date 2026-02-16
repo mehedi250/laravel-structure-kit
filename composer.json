@@ -1,0 +1,21 @@
+{
+  "name": "mehedi/laravel-structure-kit",
+  "description": "UI-based clean architecture generator for Laravel",
+  "type": "library",
+  "license": "MIT",
+  "autoload": {
+    "psr-4": {
+      "StructureKit\\": "src/"
+    }
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "StructureKit\\StructureKitServiceProvider"
+      ]
+    }
+  },
+  "require": {
+    "php": "^8.1"
+  }
+}
