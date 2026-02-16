@@ -1,8 +1,25 @@
 {
   "name": "mehedi/laravel-structure-kit",
-  "description": "UI-based clean architecture generator for Laravel",
+  "description": "Clean architecture and file structure generator for Laravel projects",
   "type": "library",
   "license": "MIT",
+  "keywords": [
+    "laravel",
+    "structure",
+    "clean-architecture",
+    "generator",
+    "scaffold"
+  ],
+  "authors": [
+    {
+      "name": "Md. Mehedi Hasan Shawon",
+      "email": "mhshawon250@gmail.com"
+    }
+  ],
+  "require": {
+    "php": "^8.1",
+    "illuminate/support": "^10.0|^11.0"
+  },
   "autoload": {
     "psr-4": {
       "StructureKit\\": "src/"
@@ -15,7 +32,6 @@
       ]
     }
   },
-  "require": {
-    "php": "^8.1"
-  }
+  "minimum-stability": "stable",
+  "prefer-stable": true
 }
