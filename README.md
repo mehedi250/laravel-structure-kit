@@ -7,12 +7,14 @@ It helps you generate **clean, scalable project structures** using **custom path
 
 ## ✨ Features
 
-- UI-based architecture generator
-- Custom path editor
-- Live preview of generated file tree
-- Service & Repository with interfaces
-- CLI support with flags & options
-- Dry-run & force overwrite support
+- ✅ UI-based architecture generator
+- ✅ Custom path editor (fully configurable)
+- ✅ Live preview of generated file tree
+- ✅ Service & Repository with interfaces
+- ✅ Auto namespace generation from paths
+- ✅ CLI support with flags & options
+- ✅ Dry-run & force overwrite support
+- ✅ Shows **only newly generated files**
 
 ---
 
@@ -24,10 +26,37 @@ composer require mehedi250/laravel-structure-kit
 
 ---
 
+## 🖥️ UI Based Architecture Generator
+
+### 🔗 UI Access Link
+
+```
+http://your-app-url/structure-kit
+```
+
+Example:
+```
+http://localhost:8000/structure-kit
+```
+
+---
+
+## 🧭 UI Usage
+
+1. Enter model/module name  
+2. Select components (Model, Controller, Service, Repository, Migration)  
+3. Customize paths for each component  
+4. Preview generated file tree live  
+5. Click **Generate**
+
+Namespaces are auto-generated from paths.
+
+---
+
 ## ⚙️ CLI Command
 
-```php
-protected $signature = 'structure-kit
+```bash
+php artisan structure-kit
     {name : Model or module name}
     {flags? : m c s r t}
     {--model : Generate model}
@@ -36,14 +65,12 @@ protected $signature = 'structure-kit
     {--repository : Generate repository (interface + class)}
     {--migration : Generate migration}
     {--dry-run : Preview without creating files}
-    {--force : Overwrite existing files}';
-
-protected $description = 'Generate Laravel structure using flags or options (m c s r t)';
+    {--force : Overwrite existing files}
 ```
 
 ---
 
-## 🚀 Usage Examples
+## 🚀 Examples
 
 ```bash
 php artisan structure-kit User mcsrt
@@ -53,19 +80,6 @@ php artisan structure-kit User mcsr --dry-run
 
 ---
 
-## 🌳 Generated Tree Preview
-
-Only newly generated files are shown:
-
-```
-app/Services/UserService.php
-app/Services/Contracts/UserServiceInterface.php
-app/Repositories/UserRepository.php
-app/Repositories/Contracts/UserRepositoryInterface.php
-```
-
----
-
 ## 📜 License
 
-MIT License
+MIT
