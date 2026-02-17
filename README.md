@@ -42,8 +42,8 @@ http://localhost:8000/structure-kit
 ---
 
 ## 🧭 UI Usage
+<img width="1263" height="770" alt="image" src="https://github.com/user-attachments/assets/7046eb41-c912-4e0d-80be-b4db8e2bc7fb" />
 
-<img width="987" height="1323" alt="0 0 0 0_8000_structure-kit (1)" src="https://github.com/user-attachments/assets/a428385b-a3db-4a5d-b40b-3ed6ae552eaa" />
 
 1. Enter model/module name  
 2. Select components (Model, Controller, Service, Repository, Migration)  
