@@ -5,7 +5,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Laravel Structure Kit</title>
-
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <style>
@@ -13,15 +12,14 @@
             --primary: #f9941f;
             --primary-dark: #ea580c;
             --secondary: #8b5cf6; 
-            --bg-gradient: linear-gradient(135deg, #fff7ed 0%, #ffedd5 50%, #e0e7ff 100%);
+            --bg-gradient: linear-gradient(135deg, #f8fafc 0%, #eff6ff 100%);
             --surface: #ffffff;
-            --text-main: #1f2937;
-            --text-light: #6b7280;
-            --border: #e5e7eb;
-            --radius-lg: 16px;
+            --text-main: #1e293b;
+            --text-light: #64748b;
+            --border: #e2e8f0;
+            --radius-lg: 12px;
             --radius-md: 8px;
-            --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
-            --shadow-colored: 0 10px 25px -5px rgba(249, 148, 31, 0.25);
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -31,18 +29,164 @@
             background: var(--bg-gradient);
             color: var(--text-main);
             min-height: 100vh;
-            padding: 40px 20px;
-            line-height: 1.6;
+            padding: 20px;
+            line-height: 1.5;
         }
 
-        .container { max-width: 850px; margin: 0 auto; }
+        .container { max-width: 1200px; margin: 0 auto; }
 
+        header { text-align: center; margin-bottom: 30px; }
         h1 {
-            text-align: center; font-size: 2.5rem; font-weight: 800; margin-bottom: 30px;
-            background: linear-gradient(to right, var(--primary), #ec4899);
+            font-size: 2rem; font-weight: 800;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            letter-spacing: -1px;
         }
+
+        /* --- LAYOUT GRID (Equal Height) --- */
+        .layout-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 24px;
+        }
+
+        @media (min-width: 900px) {
+            .layout-grid {
+                /* 350px left, rest right. 'stretch' ensures equal height */
+                grid-template-columns: 350px 1fr;
+                align-items: stretch; 
+            }
+        }
+
+        /* --- PANEL STYLING --- */
+        .panel {
+            background: var(--surface);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            flex-direction: column;
+            height: 100%; /* Fills the grid cell */
+        }
+
+        .panel-header {
+            padding: 16px 20px;
+            background: #f8fafc;
+            border-bottom: 1px solid var(--border);
+        }
+        .panel-header h2 {
+            font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.05em;
+            color: var(--text-light); font-weight: 700; margin: 0;
+        }
+
+        .panel-body {
+            padding: 20px;
+            flex: 1; /* Pushes content to fill height */
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* --- LEFT SIDE COMPONENTS --- */
+        label.field-label {
+            display: block; font-size: 0.75rem; font-weight: 700; text-transform: uppercase;
+            color: var(--text-light); margin-bottom: 6px; letter-spacing: 0.05em;
+        }
+
+        input[type="text"] {
+            width: 100%; padding: 10px 12px; border-radius: var(--radius-md);
+            border: 1px solid var(--border); background: #fff; font-size: 0.9rem;
+            color: var(--text-main); transition: all 0.2s;
+        }
+        input[type="text"]:focus {
+            outline: none; border-color: var(--primary); 
+            box-shadow: 0 0 0 3px rgba(249, 148, 31, 0.1);
+        }
+
+        .input-group { margin-bottom: 24px; }
+
+        .checkbox-list { display: flex; flex-direction: column; gap: 8px; }
+        
+        .chip-checkbox span {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 12px 16px; background: #f8fafc; border-radius: var(--radius-md);
+            font-size: 0.9rem; font-weight: 500; color: var(--text-light);
+            cursor: pointer; border: 1px solid transparent; transition: all 0.2s;
+        }
+        .chip-checkbox input:checked + span {
+            background: #fff7ed; color: var(--primary-dark); border-color: var(--primary);
+            font-weight: 600;
+        }
+
+        .chip-checkbox input:checked + span::after {
+            content: '✓'; font-weight: bold;
+        }
+        .chip-checkbox input[type="checkbox"] { display: none; }
+
+        .toggle-btn {
+            font-size: 0.75rem; color: var(--primary); cursor: pointer; font-weight: 600; float: right;
+        }
+
+        /* --- RIGHT SIDE COMPONENTS --- */
+        
+        /* Path Grid with Labels */
+        .path-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+        @media (min-width: 1200px) { .path-grid { grid-template-columns: 1fr 1fr; } }
+
+        .path-item { 
+            display: none; 
+            background: #f8fafc;
+            padding: 10px;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border);
+        }
+        .path-item.active { display: block; animation: fadeIn 0.3s ease; }
+
+        .path-label {
+            font-size: 0.7rem; font-weight: 700; color: var(--text-light);
+            margin-bottom: 4px; display: block; text-transform: uppercase;
+        }
+        .path-input-clean {
+            width: 100%; border: none; background: transparent; 
+            font-family: 'Fira Code', monospace; font-size: 0.85rem; color: var(--text-main);
+            padding: 0;
+        }
+        .path-input-clean:focus { outline: none; }
+
+        /* Terminal Preview (Flex Grow to fill height) */
+        .terminal-container {
+            display: flex; flex-direction: column; flex-grow: 1; /* Fills remaining space */
+            min-height: 200px;
+        }
+
+        .terminal-window {
+            background: #1e1e2e; border-radius: var(--radius-md);
+            overflow: hidden; border: 1px solid #333;
+            flex-grow: 1; display: flex; flex-direction: column;
+        }
+        .terminal-header {
+            background: #2a2a3c; padding: 8px 12px; display: flex; gap: 6px; flex-shrink: 0;
+        }
+        .dot { width: 10px; height: 10px; border-radius: 50%; }
+        .dot.red { background: #ff5f56; }
+        .dot.yellow { background: #ffbd2e; }
+        .dot.green { background: #27c93f; }
+
+        pre {
+            color: #a6accd; padding: 15px; overflow: auto;
+            font-family: 'Fira Code', monospace; font-size: 0.85rem; line-height: 1.6;
+            margin: 0; height: 100%;
+        }
+
+        button.submit-btn {
+            width: 100%; padding: 16px; border: none; border-radius: var(--radius-md);
+            background: var(--text-main); color: white; font-size: 1rem; font-weight: 700;
+            cursor: pointer; margin-top: auto; 
+        }
+        button.submit-btn:hover { background: var(--primary); }
 
         .alert {
             background: #ecfdf5; color: #059669; padding: 15px; border-radius: var(--radius-md);
@@ -50,99 +194,16 @@
             transition: opacity 0.5s ease;
         }
 
-        .box {
-            background: var(--surface); border-radius: var(--radius-lg); padding: 30px;
-            margin-bottom: 24px; box-shadow: var(--shadow); border: 1px solid rgba(255,255,255,0.6);
-            position: relative; overflow: hidden;
-        }
-
-        .box::before {
-            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px;
-            background: linear-gradient(90deg, var(--primary), var(--secondary));
-        }
-
-        .box-header {
-            display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;
-        }
-
-        h3 { font-size: 1.1rem; font-weight: 700; display: flex; align-items: center; gap: 8px; margin: 0; }
-        
-        .toggle-btn {
-            font-size: 0.8rem; font-weight: 700; color: var(--primary);
-            background: #fff7ed; padding: 4px 10px; border-radius: 20px;
-            cursor: pointer; border: 1px solid var(--primary); transition: all 0.2s;
-        }
-        .toggle-btn:hover { background: var(--primary); color: white; }
-
-        label.field-label {
-            display: block; font-size: 0.85rem; text-transform: uppercase;
-            letter-spacing: 0.05em; font-weight: 700; color: var(--text-light); margin-bottom: 8px;
-        }
-
-        input[type="text"] {
-            width: 100%; padding: 14px 18px; border-radius: var(--radius-md);
-            border: 2px solid #f3f4f6; background: #f9fafb; font-size: 1rem;
-            transition: all 0.2s ease; color: var(--text-main);
-        }
-
-        input[type="text"]:focus {
-            outline: none; border-color: var(--primary); background: #fff;
-            box-shadow: 0 0 0 4px rgba(249, 148, 31, 0.1);
-        }
-
-        .checkbox-grid {
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px;
-        }
-
-        /* STRICTLY HIDE CHECKBOXES */
-        .chip-checkbox input[type="checkbox"],
-        #hidden-inputs input[type="checkbox"] { 
-            display: none !important; 
-            visibility: hidden !important; 
-            opacity: 0 !important; 
-            position: absolute !important;
-        }
-
-        .chip-checkbox span {
-            display: block; padding: 12px 15px; background: #f3f4f6; border-radius: var(--radius-md);
-            text-align: center; font-size: 0.85rem; font-weight: 600; color: var(--text-light);
-            cursor: pointer; transition: all 0.2s ease; border: 2px solid transparent; user-select: none;
-        }
-
-        .chip-checkbox input[type="checkbox"]:checked + span {
-            background: #fff7ed; color: var(--primary-dark); border-color: var(--primary);
-            box-shadow: 0 4px 6px -1px rgba(249, 148, 31, 0.1); transform: translateY(-2px);
-        }
-
-        .path-grid { display: grid; grid-template-columns: 1fr; gap: 20px; }
-        .path-item { display: none; }
-        .path-item.active { display: block; animation: fadeIn 0.3s ease; }
-
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
-
-        @media (min-width: 768px) { .path-grid { grid-template-columns: 1fr 1fr; } }
-
-        pre {
-            background: #1e1e2e; color: #a6accd; padding: 20px; border-radius: var(--radius-md);
-            overflow-x: auto; font-family: 'Fira Code', monospace; font-size: 0.85rem; border-left: 4px solid var(--primary);
-        }
-
-        button.submit-btn {
-            width: 100%; padding: 18px; border: none; border-radius: var(--radius-lg);
-            background: linear-gradient(135deg, var(--primary) 0%, #fbbf24 100%);
-            color: white; font-size: 1.1rem; font-weight: 700; cursor: pointer;
-            transition: all 0.2s ease; box-shadow: var(--shadow-colored);
-            text-transform: uppercase; letter-spacing: 0.05em;
-        }
-
-        button.submit-btn:hover { transform: translateY(-3px); box-shadow: 0 15px 30px -5px rgba(249, 148, 31, 0.4); }
     </style>
 </head>
 
 <body>
 
     <div class="container">
-        <h1>Laravel Structure Kit</h1>
+        <header>
+            <h1>Laravel Structure Kit</h1>
+        </header>
 
         @if(session('success'))
             <div class="alert" id="success-alert">{{ session('success') }}</div>
@@ -151,68 +212,121 @@
         <form method="POST" action="{{ route('structure-kit.generate') }}" id="structureForm">
             @csrf
 
-            <div class="box">
-                <label class="field-label">Base Model Name</label>
-                <input type="text" name="name" id="name" placeholder="User" value="User">
-            </div>
-
-            <div class="box">
-                <div class="box-header">
-                    <h3>🛠 Generate Components</h3>
-                    <div class="toggle-btn" id="bulkToggle" onclick="toggleAll()">Select All</div>
-                </div>
-                <div class="checkbox-grid">
-                    <label class="chip-checkbox">
-                        <input type="checkbox" name="patterns[]" value="model" data-targets="model" checked>
-                        <span>Model</span>
-                    </label>
-                    <label class="chip-checkbox">
-                        <input type="checkbox" name="patterns[]" value="controller" data-targets="controller" checked>
-                        <span>Controller</span>
-                    </label>
-                    <label class="chip-checkbox">
-                        <input type="checkbox" name="patterns[]" value="migration" data-targets="migration">
-                        <span>Migration</span>
-                    </label>
-                    <label class="chip-checkbox">
-                        <input type="checkbox" name="patterns[]" value="service_pattern" data-targets="service,service_interface" checked>
-                        <span>Service Pattern</span>
-                    </label>
-                    <label class="chip-checkbox">
-                        <input type="checkbox" name="patterns[]" value="repository_pattern" data-targets="repository,repository_interface" checked>
-                        <span>Repository Pattern</span>
-                    </label>
-                </div>
+            <div class="layout-grid">
                 
-                <div id="hidden-inputs" style="display: none !important;">
-                    <input type="checkbox" name="components[]" value="model" id="real-model">
-                    <input type="checkbox" name="components[]" value="controller" id="real-controller">
-                    <input type="checkbox" name="components[]" value="migration" id="real-migration">
-                    <input type="checkbox" name="components[]" value="service" id="real-service">
-                    <input type="checkbox" name="components[]" value="service_interface" id="real-service_interface">
-                    <input type="checkbox" name="components[]" value="repository" id="real-repository">
-                    <input type="checkbox" name="components[]" value="repository_interface" id="real-repository_interface">
+                <div class="panel">
+                    <div class="panel-header">
+                        <!-- <svg xmlns="http://www.w3.org/2000/svg" fill="#000000" width="20px" height="20px" viewBox="0 0 24 24">
+                            <path d="M7 3L5 3L5 9H7L7 3ZM19 3L17 3V13H19V3ZM3 13H5L5 21H7L7 13H9V11H3L3 13ZM15 7H13V3L11 3V7L9 7L9 9L15 9V7ZM11 21H13V11H11L11 21ZM15 15V17L17 17V21H19V17H21V15L15 15Z"/>
+                        </svg> -->
+
+                        <h2>
+                            Configuration
+                        </h2>
+                    </div>
+                    <div class="panel-body">
+                        
+                        <div class="input-group">
+                            <label class="field-label">Base Model Name</label>
+                            <input type="text" name="name" id="name" placeholder="e.g. Product" value="Product">
+                        </div>
+
+                        <div class="input-group" style="flex-grow: 1;">
+                            <label class="field-label">
+                                Components 
+                                <span class="toggle-btn" id="bulkToggle" onclick="toggleAll()">Select All</span>
+                            </label>
+                            
+                            <div class="checkbox-list">
+                                <label class="chip-checkbox">
+                                    <input type="checkbox" name="patterns[]" value="model" data-targets="model" checked>
+                                    <span>Model</span>
+                                </label>
+                                <label class="chip-checkbox">
+                                    <input type="checkbox" name="patterns[]" value="controller" data-targets="controller" checked>
+                                    <span>Controller</span>
+                                </label>
+                                <label class="chip-checkbox">
+                                    <input type="checkbox" name="patterns[]" value="migration" data-targets="migration">
+                                    <span>Migration</span>
+                                </label>
+                                <label class="chip-checkbox">
+                                    <input type="checkbox" name="patterns[]" value="service_pattern" data-targets="service,service_interface" checked>
+                                    <span>Service Pattern</span>
+                                </label>
+                                <label class="chip-checkbox">
+                                    <input type="checkbox" name="patterns[]" value="repository_pattern" data-targets="repository,repository_interface" checked>
+                                    <span>Repository Pattern</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="submit-btn">🚀 Generate Files</button>
+
+                        <div id="hidden-inputs" style="display:none;">
+                            <input type="checkbox" name="components[]" value="model" id="real-model">
+                            <input type="checkbox" name="components[]" value="controller" id="real-controller">
+                            <input type="checkbox" name="components[]" value="migration" id="real-migration">
+                            <input type="checkbox" name="components[]" value="service" id="real-service">
+                            <input type="checkbox" name="components[]" value="service_interface" id="real-service_interface">
+                            <input type="checkbox" name="components[]" value="repository" id="real-repository">
+                            <input type="checkbox" name="components[]" value="repository_interface" id="real-repository_interface">
+                        </div>
+                    </div>
                 </div>
-            </div>
 
-            <div class="box" id="paths-box">
-                <h3>📂 Configuration Paths</h3>
-                <div class="path-grid">
-                    <div class="path-item" data-path-for="model"><label class="field-label">Model Path</label><input type="text" name="paths[model]" value="app/Models"></div>
-                    <div class="path-item" data-path-for="controller"><label class="field-label">Controller Path</label><input type="text" name="paths[controller]" value="app/Http/Controllers"></div>
-                    <div class="path-item" data-path-for="service_interface"><label class="field-label">Service Interface Path</label><input type="text" name="paths[service_interface]" value="app/Services/Contracts"></div>
-                    <div class="path-item" data-path-for="service"><label class="field-label">Service Path</label><input type="text" name="paths[service]" value="app/Services"></div>
-                    <div class="path-item" data-path-for="repository_interface"><label class="field-label">Repository Interface Path</label><input type="text" name="paths[repository_interface]" value="app/Repositories/Contracts"></div>
-                    <div class="path-item" data-path-for="repository"><label class="field-label">Repository Path</label><input type="text" name="paths[repository]" value="app/Repositories"></div>
+                <div class="panel">
+                    <div class="panel-header">
+                        <h2>File Path Preview</h2>
+                    </div>
+                    <div class="panel-body">
+                        
+                        <div id="paths-box">
+                            <label class="field-label" style="margin-bottom: 10px;">Customize Namespaces</label>
+                            <div class="path-grid">
+                                <div class="path-item" data-path-for="model">
+                                    <span class="path-label">Model</span>
+                                    <input class="path-input-clean" type="text" name="paths[model]" value="app/Models">
+                                </div>
+                                <div class="path-item" data-path-for="controller">
+                                    <span class="path-label">Controller</span>
+                                    <input class="path-input-clean" type="text" name="paths[controller]" value="app/Http/Controllers">
+                                </div>
+                                <div class="path-item" data-path-for="service_interface">
+                                    <span class="path-label">Service Interface</span>
+                                    <input class="path-input-clean" type="text" name="paths[service_interface]" value="app/Services/Contracts">
+                                </div>
+                                <div class="path-item" data-path-for="service">
+                                    <span class="path-label">Service Class</span>
+                                    <input class="path-input-clean" type="text" name="paths[service]" value="app/Services">
+                                </div>
+                                <div class="path-item" data-path-for="repository_interface">
+                                    <span class="path-label">Repository Interface</span>
+                                    <input class="path-input-clean" type="text" name="paths[repository_interface]" value="app/Repositories/Contracts">
+                                </div>
+                                <div class="path-item" data-path-for="repository">
+                                    <span class="path-label">Repository Class</span>
+                                    <input class="path-input-clean" type="text" name="paths[repository]" value="app/Repositories">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="terminal-container">
+                            <label class="field-label">Structure Output</label>
+                            <div class="terminal-window">
+                                <div class="terminal-header">
+                                    <div class="dot red"></div>
+                                    <div class="dot yellow"></div>
+                                    <div class="dot green"></div>
+                                </div>
+                                <pre id="preview"></pre>
+                            </div>
+                        </div>
+
+                    </div>
                 </div>
-            </div>
 
-            <div class="box">
-                <h3>👀 File Preview</h3>
-                <pre id="preview"></pre>
             </div>
-
-            <button type="submit" class="submit-btn">🚀 Generate Files</button>
         </form>
     </div>
 
@@ -244,7 +358,7 @@
             toggleBtn.textContent = allChecked ? "Deselect All" : "Select All";
 
             document.querySelectorAll('#hidden-inputs input').forEach(i => i.checked = false);
-            document.querySelectorAll('.path-item').forEach(i => i.classList.remove('active'));
+            // document.querySelectorAll('.path-item').forEach(i => i.classList.remove('active'));
 
             patternCheckboxes.forEach(pc => {
                 if (pc.checked) {
@@ -252,17 +366,20 @@
                     targets.forEach(t => {
                         const realInput = document.getElementById('real-' + t);
                         if(realInput) realInput.checked = true;
+                        
                         const pathDiv = document.querySelector(`[data-path-for="${t}"]`);
                         if(pathDiv) pathDiv.classList.add('active');
                     });
                 }
             });
 
-            const activePaths = document.querySelectorAll('.path-item.active');
-            document.getElementById('paths-box').style.display = activePaths.length > 0 ? 'block' : 'none';
+            generateTree(name);
+        }
 
+        function generateTree(name) {
             const data = new FormData(form);
             let tree = '';
+            
             const map = {
                 model: name + '.php',
                 controller: name + 'Controller.php',
@@ -273,18 +390,20 @@
             };
 
             const selectedComponents = data.getAll('components[]');
+            
             for (const [key, file] of Object.entries(map)) {
                 if (selectedComponents.includes(key)) {
                     const path = data.get(`paths[${key}]`);
-                    if (path) tree += path + '/' + file + "\n";
+                    if (path) tree += `+ ${path}/${file}\n`;
                 }
             }
 
             if (selectedComponents.includes('migration')) {
-                tree += "database/migrations/create_" + name.toLowerCase() + "_table.php\n";
+                const date = new Date().toISOString().slice(0,10).replace(/-/g,'_');
+                tree += `+ database/migrations/${date}_000000_create_${name.toLowerCase()}_table.php\n`;
             }
 
-            preview.textContent = tree || 'No files selected';
+            preview.textContent = tree || '// No components selected';
         }
 
         form.addEventListener('input', updateState);
