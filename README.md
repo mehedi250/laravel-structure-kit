@@ -19,7 +19,7 @@ It helps you generate **clean, scalable project structures** using **custom path
 ## 📦 Installation
 
 ```bash
-composer require mehedi/laravel-structure-kit
+composer require mehedi250/laravel-structure-kit
 ```
 
 ---
