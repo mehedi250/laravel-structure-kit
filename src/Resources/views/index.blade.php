@@ -12,6 +12,7 @@
             --primary: #f9941f;
             --primary-dark: #ea580c;
             --secondary: #8b5cf6; 
+            --success: #22c55e;
             --bg-gradient: linear-gradient(135deg, #f8fafc 0%, #eff6ff 100%);
             --surface: #ffffff;
             --text-main: #1e293b;
@@ -72,6 +73,9 @@
             padding: 16px 20px;
             background: #f8fafc;
             border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
         }
         .panel-header h2 {
             font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.05em;
@@ -137,18 +141,30 @@
         @media (min-width: 1200px) { .path-grid { grid-template-columns: 1fr 1fr; } }
 
         .path-item { 
-            display: none; 
+            /* display: none;  */
             background: #f8fafc;
             padding: 10px;
             border-radius: var(--radius-md);
             border: 1px solid var(--border);
         }
-        .path-item.active { display: block; animation: fadeIn 0.3s ease; }
+        .path-item.active { 
+            display: block; 
+            /* animation: fadeIn 0.3s ease;  */
+        }
 
         .path-label {
             font-size: 0.7rem; font-weight: 700; color: var(--text-light);
             margin-bottom: 4px; display: block; text-transform: uppercase;
+            display: flex; align-items: center; justify-content: space-between;
         }
+
+        /* .path-item.active .path-label::after{
+            content: "✓";
+            color: var(--success);
+            font-weight: bold;
+            font-size: 0.7rem;
+        } */
+
         .path-input-clean {
             width: 100%; border: none; background: transparent; 
             font-family: 'Fira Code', monospace; font-size: 0.85rem; color: var(--text-main);
@@ -194,6 +210,52 @@
             transition: opacity 0.5s ease;
         }
 
+        /* --- FOOTER --- */
+        .app-footer {
+            margin-top: 40px;
+            padding: 16px 20px;
+            border-top: 1px solid var(--border);
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(6px);
+        }
+
+        .footer-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+
+        .footer-left strong {
+            color: var(--text-main);
+            font-weight: 700;
+        }
+
+        .footer-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .footer-right a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .footer-right a:hover {
+            text-decoration: underline;
+        }
+
+        .dot-sep {
+            opacity: 0.5;
+        }
+
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
@@ -216,13 +278,8 @@
                 
                 <div class="panel">
                     <div class="panel-header">
-                        <!-- <svg xmlns="http://www.w3.org/2000/svg" fill="#000000" width="20px" height="20px" viewBox="0 0 24 24">
-                            <path d="M7 3L5 3L5 9H7L7 3ZM19 3L17 3V13H19V3ZM3 13H5L5 21H7L7 13H9V11H3L3 13ZM15 7H13V3L11 3V7L9 7L9 9L15 9V7ZM11 21H13V11H11L11 21ZM15 15V17L17 17V21H19V17H21V15L15 15Z"/>
-                        </svg> -->
-
-                        <h2>
-                            Configuration
-                        </h2>
+                        <h2>Configuration</h2>
+                        <div style="font-size: 0.8rem; color: var(--text-light);">v0.1.1</div>
                     </div>
                     <div class="panel-body">
                         
@@ -329,6 +386,24 @@
             </div>
         </form>
     </div>
+    <footer class="app-footer">
+        <div class="footer-inner">
+            <div class="footer-left">
+                <strong>Laravel Structure Kit</strong>
+                <span>— UI + CLI Architecture Generator</span>
+            </div>
+
+            <div class="footer-right">
+                <span>v0.1.1</span>
+                <span class="dot-sep">•</span>
+                <a href="https://github.com/mehedi250/laravel-structure-kit" target="_blank">
+                    GitHub
+                </a>
+                <span class="dot-sep">•</span>
+                <span>© {{ date('Y') }}</span>
+            </div>
+        </div>
+    </footer>
 
     <script>
         const form = document.getElementById('structureForm');
@@ -358,7 +433,7 @@
             toggleBtn.textContent = allChecked ? "Deselect All" : "Select All";
 
             document.querySelectorAll('#hidden-inputs input').forEach(i => i.checked = false);
-            // document.querySelectorAll('.path-item').forEach(i => i.classList.remove('active'));
+            document.querySelectorAll('.path-item').forEach(i => i.classList.remove('active'));
 
             patternCheckboxes.forEach(pc => {
                 if (pc.checked) {
