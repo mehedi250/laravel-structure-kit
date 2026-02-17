@@ -43,6 +43,8 @@ http://localhost:8000/structure-kit
 
 ## 🧭 UI Usage
 
+<img width="987" height="1323" alt="0 0 0 0_8000_structure-kit (1)" src="https://github.com/user-attachments/assets/a428385b-a3db-4a5d-b40b-3ed6ae552eaa" />
+
 1. Enter model/module name  
 2. Select components (Model, Controller, Service, Repository, Migration)  
 3. Customize paths for each component  
@@ -50,6 +52,7 @@ http://localhost:8000/structure-kit
 5. Click **Generate**
 
 Namespaces are auto-generated from paths.
+
 
 ---
 
