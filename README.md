@@ -80,7 +80,7 @@ http://localhost:8000/structure-kit
 
 ## 🧭 UI Workflow
 
-
+![Laravel Structure Kit UI](https://raw.githubusercontent.com/mehedi250/laravel-structure-kit/main/src/ui.png)
 
 ### How it works:
 
