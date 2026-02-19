@@ -1,20 +1,54 @@
 # Laravel Structure Kit
 
-Laravel Structure Kit is a **UI + CLI based architecture generator** for Laravel projects.  
-It helps you generate **clean, scalable project structures** using **custom paths**, **live preview**, and **flexible flags**.
+Laravel Structure Kit is a **UI-first architecture & file structure generator for Laravel**.
+It allows developers to **design, preview, and generate clean architecture visually** — before a single file is written.
+
+This package is built for developers who care about **scalability, maintainability, and clean project structure**.
 
 ---
 
-## ✨ Features
+## 🚀 Why Laravel Structure Kit?
 
-- ✅ UI-based architecture generator
-- ✅ Custom path editor (fully configurable)
-- ✅ Live preview of generated file tree
-- ✅ Service & Repository with interfaces
-- ✅ Auto namespace generation from paths
-- ✅ CLI support with flags & options
-- ✅ Dry-run & force overwrite support
-- ✅ Shows **only newly generated files**
+Laravel grows fast — and so does technical debt.
+
+Laravel Structure Kit helps you:
+
+* Design architecture **before generating files**
+* Maintain **consistent, scalable structure**
+* Avoid namespace & folder mistakes
+* Enforce clean architecture patterns
+* Generate code with confidence
+
+> Think of it as **“Architecture first, code second.”**
+
+---
+
+## ✨ Core Features
+
+### 🖥️ UI-Based Architecture Generator (Main Highlight)
+
+* Visual file & architecture generator
+* Select components with checkboxes
+* Fully customizable paths (no fixed folders)
+* Live preview of generated file tree
+* Auto-generated namespaces from paths
+* Shows **only newly generated files**
+* No guessing — preview everything first
+
+### 🧩 Supported Components
+
+* Model
+* Controller
+* Service (Interface + Implementation)
+* Repository (Interface + Implementation)
+* Migration
+
+### ⚙️ CLI Support (Power Users)
+
+* Artisan command with flags
+* Dry-run mode (preview only)
+* Force overwrite existing files
+* Perfect for automation & CI pipelines
 
 ---
 
@@ -24,35 +58,50 @@ It helps you generate **clean, scalable project structures** using **custom path
 composer require mehedi250/laravel-structure-kit
 ```
 
+Laravel auto-discovers the service provider.
+
 ---
 
-## 🖥️ UI Based Architecture Generator
+## 🖥️ UI-Based Generator
 
-### 🔗 UI Access Link
+### 🔗 Access URL
 
 ```
 http://your-app-url/structure-kit
 ```
 
 Example:
+
 ```
 http://localhost:8000/structure-kit
 ```
 
 ---
 
-## 🧭 UI Usage
-<img width="1263" height="770" alt="image" src="https://github.com/user-attachments/assets/7046eb41-c912-4e0d-80be-b4db8e2bc7fb" />
+## 🧭 UI Workflow
 
+![Laravel Structure Kit UI](https://raw.githubusercontent.com/mehedi250/laravel-structure-kit/main/src/ui.png)
 
-1. Enter model/module name  
-2. Select components (Model, Controller, Service, Repository, Migration)  
-3. Customize paths for each component  
-4. Preview generated file tree live  
+### How it works:
+
+1. Enter **Model / Module name**
+2. Select components to generate
+3. Customize folder paths per component
+4. See **live file tree preview**
 5. Click **Generate**
 
-Namespaces are auto-generated from paths.
+✅ Namespaces are inferred automatically
+✅ Only newly generated files are shown
 
+---
+
+## 🧠 Architecture Benefits
+
+* Encourages separation of concerns
+* Service & repository driven design
+* Cleaner controllers
+* Easier testing & refactoring
+* Ideal for large Laravel projects
 
 ---
 
@@ -73,16 +122,48 @@ php artisan structure-kit
 
 ---
 
-## 🚀 Examples
+## 🚀 CLI Examples
+
+Generate everything:
 
 ```bash
 php artisan structure-kit User mcsrt
+```
+
+Generate only service & repository:
+
+```bash
 php artisan structure-kit User --service --repository
+```
+
+Preview without generating:
+
+```bash
 php artisan structure-kit User mcsr --dry-run
 ```
 
 ---
 
+## 🧪 Ideal Use Cases
+
+* New Laravel project setup
+* Refactoring legacy code
+* Enforcing team architecture rules
+* Teaching clean architecture
+* Rapid scaffolding with confidence
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome!
+
+GitHub:
+[https://github.com/mehedi250/laravel-structure-kit](https://github.com/mehedi250/laravel-structure-kit)
+
+---
+
 ## 📜 License
 
-MIT
+MIT License
+© Md. Mehedi Hasan Shawon

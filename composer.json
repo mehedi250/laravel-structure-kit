@@ -1,19 +1,39 @@
 {
   "name": "mehedi250/laravel-structure-kit",
-  "description": "Clean architecture and file structure generator for Laravel projects",
+  "description": "A clean architecture and scalable file structure generator for Laravel projects (UI + CLI)",
   "type": "library",
   "license": "MIT",
+  "readme": "README.md",
   "keywords": [
     "laravel",
-    "structure",
+    "laravel-package",
+    "laravel-tool",
+    "laravel-structure",
+    "laravel-architecture",
     "clean-architecture",
+    "ddd",
+    "domain-driven-design",
+    "mvc",
+    "scaffold",
+    "scaffolding",
     "generator",
-    "scaffold"
+    "code-generator",
+    "boilerplate",
+    "project-structure",
+    "folder-structure",
+    "best-practices",
+    "developer-tools",
+    "cli",
+    "artisan",
+    "productivity",
+    "backend",
+    "php"
   ],
   "authors": [
     {
       "name": "Md. Mehedi Hasan Shawon",
-      "email": "mhshawon250@gmail.com"
+      "email": "mhshawon250@gmail.com",
+      "role": "Developer"
     }
   ],
   "require": {
@@ -31,6 +51,9 @@
         "StructureKit\\StructureKitServiceProvider"
       ]
     }
+  },
+  "scripts": {
+    "test": "phpunit"
   },
   "minimum-stability": "stable",
   "prefer-stable": true
