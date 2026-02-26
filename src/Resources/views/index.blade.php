@@ -279,7 +279,7 @@
                 <div class="panel">
                     <div class="panel-header">
                         <h2>Configuration</h2>
-                        <div style="font-size: 0.8rem; color: var(--text-light);">v0.1.3</div>
+                        <div style="font-size: 0.8rem; color: var(--text-light);">v0.1.4</div>
                     </div>
                     <div class="panel-body">
                         
@@ -394,7 +394,7 @@
             </div>
 
             <div class="footer-right">
-                <span>v0.1.3</span>
+                <span>v0.1.4</span>
                 <span class="dot-sep">•</span>
                 <a href="https://github.com/mehedi250/laravel-structure-kit" target="_blank">
                     GitHub
