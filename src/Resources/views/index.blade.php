@@ -355,7 +355,7 @@
                                 </div>
                                 <div class="path-item" data-path-for="service">
                                     <span class="path-label">Service Class</span>
-                                    <input class="path-input-clean" type="text" name="paths[service]" value="app/Services">
+                                    <input class="path-input-clean" type="text" name="paths[service]" value="app/Services/Implementations">
                                 </div>
                                 <div class="path-item" data-path-for="repository_interface">
                                     <span class="path-label">Repository Interface</span>
@@ -363,7 +363,7 @@
                                 </div>
                                 <div class="path-item" data-path-for="repository">
                                     <span class="path-label">Repository Class</span>
-                                    <input class="path-input-clean" type="text" name="paths[repository]" value="app/Repositories">
+                                    <input class="path-input-clean" type="text" name="paths[repository]" value="app/Repositories/Eloquent">
                                 </div>
                             </div>
                         </div>

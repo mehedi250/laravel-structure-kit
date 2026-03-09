@@ -72,6 +72,7 @@ class StructureKitService
                     'interface' => "{$name}RepositoryInterface",
                     'model' => $name,
                     'modelNamespace' => $this->modelNamespace($paths['model'], $name),
+                    'repositoryInterfaceNamespace' => $this->ns($paths['repository_interface'] ?? '') . "\\{$name}RepositoryInterface"
                 ]
             );
         }
@@ -112,10 +113,11 @@ class StructureKitService
                     'repositoryInterface' => "{$name}RepositoryInterface",
                     'repositoryInterfaceNamespace' =>
                         $usesRepository
-                        ? $this->ns($paths['repository_interface']) . "\\{$name}RepositoryInterface"
+                        ? $this->ns($paths['repository_interface'] ?? '') . "\\{$name}RepositoryInterface"
                         : '',
                     'model' => $name,
                     'modelNamespace' => $this->modelNamespace($paths['model'], $name),
+                    'serviceInterfaceNamespace' => $this->ns($paths['service_interface'] ?? '') . "\\{$name}ServiceInterface"
                 ]
             );
         }
@@ -126,15 +128,17 @@ class StructureKitService
         |--------------------------------------------------------------------------
         */
         if (in_array('controller', $components)) {
+            $service = in_array('service', $components);
             $this->make(
-                'controller.stub',
+                $service ? 'controller.stub' : 'controller-without-service.stub',
                 "{$paths['controller']}/{$name}Controller.php",
                 $paths['controller'],
                 [
                     'model' => $name,
-                    'serviceClass' => "{$name}ServiceInterface",
-                    'serviceNamespace' =>
-                        $this->ns($paths['service_interface']) . "\\{$name}ServiceInterface",
+                    'serviceInterface' => "{$name}ServiceInterface",
+                    'serviceInterfaceNamespace' => $service ?
+                        $this->ns($paths['service_interface'] ?? '') . "\\{$name}ServiceInterface"
+                        : '',
                 ]
             );
         }

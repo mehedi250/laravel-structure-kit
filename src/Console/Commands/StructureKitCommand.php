@@ -64,12 +64,20 @@ class StructureKitCommand extends Command
         $paths = [
             'model' => 'app/Models',
             'controller' => 'app/Http/Controllers',
-            'service' => 'app/Services',
+            'service' => 'app/Services/Implementations',
             'service_interface' => 'app/Services/Contracts',
-            'repository' => 'app/Repositories',
+            'repository' => 'app/Repositories/Eloquent',
             'repository_interface' => 'app/Repositories/Contracts',
         ];
 
+        $highlight = [
+            'Models' => 'green',
+            'Controllers' => 'blue',
+            'Services' => 'cyan',
+            'Contracts' => 'yellow',
+            'Repositories' => 'magenta',
+            'migrations' => 'red',
+        ];
         if (!$this->option('dry-run')) {
             $this->service->generateFromUI([
                 'name' => $name,
@@ -85,16 +93,27 @@ class StructureKitCommand extends Command
             $this->info("\n📂 Generated Structure:\n");
 
             $tree = new TreePrinter();
+            $tree->printFiles($generated, $highlight);
+        } else {
+            $generated = [];
+            $this->info("\n📂 Possible file paths:\n");
+            if (isset($components['model']))
+                $generated[] = $paths['model'] . "/" . $name . ".php";
+            if (isset($components['controller']))
+                $generated[] = $paths['controller'] . "/" . $name . "Controller.php";
+            if (isset($components['service']))
+                $generated[] = $paths['service'] . "/" . $name . "Service.php";
+            if (isset($components['service_interface']))
+                $generated[] = $paths['service_interface'] . "/" . $name . "ServiceInterface.php";
+            if (isset($components['repository']))
+                $generated[] = $paths['repository'] . "/" . $name . "Repository.php";
+            if (isset($components['repository_interface']))
+                $generated[] = $paths['repository_interface'] . "/" . $name . "RepositoryInterface.php";
+            if (isset($components['migration']))
+                $generated[] = "database/migrations/2026_03_09_234714_create_" . strtolower($name) . "_table.php";
 
-            $highlight = [
-                'Models' => 'green',
-                'Controllers' => 'blue',
-                'Services' => 'cyan',
-                'Contracts' => 'yellow',
-                'Repositories' => 'magenta',
-                'migrations' => 'red',
-            ];
-
+            $this->info("\n📂 Possible file paths:\n");
+            $tree = new TreePrinter();
             $tree->printFiles($generated, $highlight);
         }
 
