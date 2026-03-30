@@ -109,8 +109,10 @@ class StructureKitCommand extends Command
                 $generated[] = $paths['repository'] . "/" . $name . "Repository.php";
             if (isset($components['repository_interface']))
                 $generated[] = $paths['repository_interface'] . "/" . $name . "RepositoryInterface.php";
-            if (isset($components['migration']))
-                $generated[] = "database/migrations/2026_03_09_234714_create_" . strtolower($name) . "_table.php";
+            if (isset($components['migration'])) {
+                $timestamp = now()->format('Y_m_d_His');
+                $generated[] = "database/migrations/{$timestamp}_create_" . strtolower($name) . "_table.php";
+            }
 
             $this->info("\n📂 Possible file paths:\n");
             $tree = new TreePrinter();

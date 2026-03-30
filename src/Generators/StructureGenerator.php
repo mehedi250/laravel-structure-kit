@@ -51,7 +51,7 @@ class StructureGenerator
         $content = File::get($stubPath);
 
         foreach ($replacements as $key => $value) {
-            $content = str_replace('{{ ' . $key . ' }}', $value, $content);
+            $content = preg_replace('/\{\{\s*' . preg_quote($key, '/') . '\s*\}\}/', $value, $content);
         }
 
         // Detect unreplaced placeholders
@@ -80,8 +80,9 @@ class StructureGenerator
             chmod($path, 0664); // file: rw-rw-r--
         }
 
-        @chown($path, $hostUser);
-        @chgrp($path, $hostGroup);
+        // Avoiding explicit chown/chgrp to prevent permission denied errors on standard developer machines
+        // @chown($path, $hostUser);
+        // @chgrp($path, $hostGroup);
 
         if (is_dir($path)) {
             $items = scandir($path);

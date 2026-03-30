@@ -14,13 +14,14 @@
             --secondary: #8b5cf6; 
             --success: #22c55e;
             --bg-gradient: linear-gradient(135deg, #f8fafc 0%, #eff6ff 100%);
-            --surface: #ffffff;
+            --surface: rgba(255, 255, 255, 0.9);
             --text-main: #1e293b;
             --text-light: #64748b;
             --border: #e2e8f0;
             --radius-lg: 12px;
             --radius-md: 8px;
             --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
+            --bg-gradient: linear-gradient(135deg, #6366f1 0%, #f9941f 100%);
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -38,9 +39,14 @@
 
         header { text-align: center; margin-bottom: 30px; }
         h1 {
-            font-size: 2rem; font-weight: 800;
-            background: linear-gradient(to right, var(--primary), var(--secondary));
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+font-size: 2.5rem;
+    font-weight: 800;
+    /* Use colors that are slightly different from the background */
+    background: linear-gradient(to right, #ffffff, #e2e8f0);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    /* This white glow saves the readability */
+    filter: drop-shadow(0 2px 15px rgba(255, 255, 255, 0.3));
         }
 
         /* --- LAYOUT GRID (Equal Height) --- */
@@ -66,7 +72,8 @@
             box-shadow: var(--shadow-sm);
             display: flex;
             flex-direction: column;
-            height: 100%; /* Fills the grid cell */
+            height: 100%;
+            backdrop-filter: blur(10px);
         }
 
         .panel-header {
@@ -76,6 +83,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
+            border-radius: var(--radius-lg) var(--radius-lg) 0 0;
         }
         .panel-header h2 {
             font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.05em;
@@ -209,6 +217,10 @@
             margin-bottom: 20px; border: 1px solid #a7f3d0; text-align: center; font-weight: 600;
             transition: opacity 0.5s ease;
         }
+        
+        .alert.error {
+            background: #fef2f2; color: #dc2626; border-color: #fecaca;
+        }
 
         /* --- FOOTER --- */
         .app-footer {
@@ -267,6 +279,7 @@
             <h1>Laravel Structure Kit</h1>
         </header>
 
+        <div id="js-messages"></div>
         @if(session('success'))
             <div class="alert" id="success-alert">{{ session('success') }}</div>
         @endif
@@ -279,7 +292,7 @@
                 <div class="panel">
                     <div class="panel-header">
                         <h2>Configuration</h2>
-                        <div style="font-size: 0.8rem; color: var(--text-light);">v0.1.4</div>
+                        <div style="font-size: 0.8rem; color: var(--text-light);">{{ $version }}</div>
                     </div>
                     <div class="panel-body">
                         
@@ -304,7 +317,7 @@
                                     <span>Controller</span>
                                 </label>
                                 <label class="chip-checkbox">
-                                    <input type="checkbox" name="patterns[]" value="migration" data-targets="migration">
+                                    <input type="checkbox" name="patterns[]" value="migration" data-targets="migration" checked>
                                     <span>Migration</span>
                                 </label>
                                 <label class="chip-checkbox">
@@ -316,6 +329,13 @@
                                     <span>Repository Pattern</span>
                                 </label>
                             </div>
+                        </div>
+
+                        <div class="input-group" style="margin-bottom: 24px;">
+                            <label class="" style="display: inline-block;">
+                                <input type="checkbox" id="remember-paths">
+                                <span>Remember current path</span>
+                            </label>
                         </div>
 
                         <button type="submit" class="submit-btn">🚀 Generate Files</button>
@@ -335,6 +355,7 @@
                 <div class="panel">
                     <div class="panel-header">
                         <h2>File Path Preview</h2>
+                        <button type="button" id="refreshPathsBtn" style="background: none; border: none; color: var(--primary); cursor: pointer; font-size: 0.8rem; font-weight: 600;">Refresh Path</button>
                     </div>
                     <div class="panel-body">
                         
@@ -394,7 +415,7 @@
             </div>
 
             <div class="footer-right">
-                <span>v0.1.4</span>
+                <span>{{ $version }}</span>
                 <span class="dot-sep">•</span>
                 <a href="https://github.com/mehedi250/laravel-structure-kit" target="_blank">
                     GitHub
@@ -482,6 +503,146 @@
         }
 
         form.addEventListener('input', updateState);
+
+        // Task 3: On page load, retrieve saved paths
+        const rememberCheckbox = document.getElementById('remember-paths');
+        const savedRemember = localStorage.getItem('structure_kit_remember');
+        
+        if (savedRemember === 'true') {
+            rememberCheckbox.checked = true;
+            const savedPaths = localStorage.getItem('structure_kit_paths');
+            if (savedPaths) {
+                try {
+                    const parsedPaths = JSON.parse(savedPaths);
+                    for (const [key, value] of Object.entries(parsedPaths)) {
+                        const inputs = document.getElementsByName(key);
+                        if (inputs.length > 0) {
+                            inputs[0].value = value;
+                        }
+                    }
+                } catch (e) {
+                    console.error('Failed to parse saved paths', e);
+                }
+            }
+        }
+
+        // Task 2: Refresh File Paths
+        document.getElementById('refreshPathsBtn').addEventListener('click', () => {
+            const defaultPaths = {
+                model: "app/Models",
+                controller: "app/Http/Controllers",
+                service_interface: "app/Services/Contracts",
+                service: "app/Services/Implementations",
+                repository_interface: "app/Repositories/Contracts",
+                repository: "app/Repositories/Eloquent"
+            };
+            
+            for (const [key, value] of Object.entries(defaultPaths)) {
+                const inputs = document.getElementsByName(`paths[${key}]`);
+                if (inputs.length > 0) {
+                    inputs[0].value = value;
+                }
+            }
+            
+            localStorage.removeItem('structure_kit_paths');
+            localStorage.setItem('structure_kit_remember', 'false');
+            document.getElementById('remember-paths').checked = false;
+            updateState();
+        });
+
+        function showMessage(msg, type) {
+            const container = document.getElementById('js-messages');
+            container.innerHTML = '';
+            const alertDiv = document.createElement('div');
+            alertDiv.className = 'alert ' + type;
+            alertDiv.textContent = msg;
+            container.appendChild(alertDiv);
+            
+            setTimeout(() => {
+                alertDiv.style.opacity = '0';
+                setTimeout(() => alertDiv.remove(), 500);
+            }, 5000);
+        }
+
+        // Task 1: Fetch API Form Submission
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const submitBtn = form.querySelector('.submit-btn');
+            const originalBtnText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '🚀 Generating...';
+            submitBtn.disabled = true;
+
+            const data = new FormData(form);
+            
+            // Task 3: Save paths if checkbox is selected
+            if (rememberCheckbox.checked) {
+                const pathsToSave = {};
+                for (const [key, value] of data.entries()) {
+                    if (key.startsWith('paths[')) {
+                        pathsToSave[key] = value;
+                    }
+                }
+                localStorage.setItem('structure_kit_paths', JSON.stringify(pathsToSave));
+                localStorage.setItem('structure_kit_remember', 'true');
+            } else {
+                localStorage.removeItem('structure_kit_paths');
+                localStorage.setItem('structure_kit_remember', 'false');
+            }
+
+            fetch(form.action, {
+                method: 'POST',
+                body: data,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'application/json'
+                }
+            })
+            .then(async response => {
+                const isJson = response.headers.get('content-type')?.includes('application/json');
+                let resData = null;
+                if (isJson) {
+                    resData = await response.json();
+                } else {
+                    resData = await response.text();
+                }
+                
+                if (response.ok) {
+                    showMessage(resData.message || 'Structure generated successfully!', 'success');
+                } else {
+                    let errorMessage = 'Something went wrong. Please try again.';
+                    if (isJson) {
+                        if (resData.errors) {
+                            errorMessage = Object.values(resData.errors)
+                                                 .map(errs => errs.join(' '))
+                                                 .join('<br>');
+                        } else if (resData.message) {
+                            errorMessage = resData.message;
+                        }
+                    }
+                    
+                    const container = document.getElementById('js-messages');
+                    container.innerHTML = '';
+                    const alertDiv = document.createElement('div');
+                    alertDiv.className = 'alert error';
+                    alertDiv.innerHTML = '<strong>Error:</strong><br>' + errorMessage;
+                    container.appendChild(alertDiv);
+                    
+                    setTimeout(() => {
+                        alertDiv.style.opacity = '0';
+                        setTimeout(() => alertDiv.remove(), 500);
+                    }, 6000);
+                }
+            })
+            .catch(error => {
+                showMessage('Network Error: ' + error.message, 'error');
+            })
+            .finally(() => {
+                submitBtn.innerHTML = originalBtnText;
+                submitBtn.disabled = false;
+            });
+        });
+
         updateState(); 
     </script>
 </body>

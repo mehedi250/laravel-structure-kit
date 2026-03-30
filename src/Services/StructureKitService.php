@@ -31,14 +31,18 @@ class StructureKitService
         |--------------------------------------------------------------------------
         */
         if (in_array('model', $components)) {
-            $this->make(
-                'model.stub',
-                "{$paths['model']}/{$name}.php",
-                $paths['model'],
-                [
-                    'model' => $name,
-                ]
-            );
+            try {
+                $this->make(
+                    'model.stub',
+                    "{$paths['model']}/{$name}.php",
+                    $paths['model'],
+                    [
+                        'model' => $name,
+                    ]
+                );
+            } catch (\Exception $e) {
+                \Illuminate\Support\Facades\Log::error("StructureKit Model Error: " . $e->getMessage());
+            }
         }
 
         /*
@@ -47,14 +51,18 @@ class StructureKitService
         |--------------------------------------------------------------------------
         */
         if (in_array('repository_interface', $components)) {
-            $this->make(
-                'repository-interface.stub',
-                "{$paths['repository_interface']}/{$name}RepositoryInterface.php",
-                $paths['repository_interface'],
-                [
-                    'interface' => "{$name}RepositoryInterface",
-                ]
-            );
+            try {
+                $this->make(
+                    'repository-interface.stub',
+                    "{$paths['repository_interface']}/{$name}RepositoryInterface.php",
+                    $paths['repository_interface'],
+                    [
+                        'interface' => "{$name}RepositoryInterface",
+                    ]
+                );
+            } catch (\Exception $e) {
+                \Illuminate\Support\Facades\Log::error("StructureKit Repository Interface Error: " . $e->getMessage());
+            }
         }
 
         /*
@@ -63,18 +71,22 @@ class StructureKitService
         |--------------------------------------------------------------------------
         */
         if (in_array('repository', $components)) {
-            $this->make(
-                'repository.stub',
-                "{$paths['repository']}/{$name}Repository.php",
-                $paths['repository'],
-                [
-                    'class' => "{$name}Repository",
-                    'interface' => "{$name}RepositoryInterface",
-                    'model' => $name,
-                    'modelNamespace' => $this->modelNamespace($paths['model'], $name),
-                    'repositoryInterfaceNamespace' => $this->ns($paths['repository_interface'] ?? '') . "\\{$name}RepositoryInterface"
-                ]
-            );
+            try {
+                $this->make(
+                    'repository.stub',
+                    "{$paths['repository']}/{$name}Repository.php",
+                    $paths['repository'],
+                    [
+                        'class' => "{$name}Repository",
+                        'interface' => "{$name}RepositoryInterface",
+                        'model' => $name,
+                        'modelNamespace' => $this->modelNamespace($paths['model'], $name),
+                        'repositoryInterfaceNamespace' => $this->ns($paths['repository_interface'] ?? '') . "\\{$name}RepositoryInterface"
+                    ]
+                );
+            } catch (\Exception $e) {
+                \Illuminate\Support\Facades\Log::error("StructureKit Repository Error: " . $e->getMessage());
+            }
         }
 
         /*
@@ -83,14 +95,18 @@ class StructureKitService
         |--------------------------------------------------------------------------
         */
         if (in_array('service_interface', $components)) {
-            $this->make(
-                'service-interface.stub',
-                "{$paths['service_interface']}/{$name}ServiceInterface.php",
-                $paths['service_interface'],
-                [
-                    'interface' => "{$name}ServiceInterface",
-                ]
-            );
+            try {
+                $this->make(
+                    'service-interface.stub',
+                    "{$paths['service_interface']}/{$name}ServiceInterface.php",
+                    $paths['service_interface'],
+                    [
+                        'interface' => "{$name}ServiceInterface",
+                    ]
+                );
+            } catch (\Exception $e) {
+                \Illuminate\Support\Facades\Log::error("StructureKit Service Interface Error: " . $e->getMessage());
+            }
         }
 
         /*
@@ -99,27 +115,31 @@ class StructureKitService
         |--------------------------------------------------------------------------
         */
         if (in_array('service', $components)) {
-            $usesRepository = in_array('repository', $components);
+            try {
+                $usesRepository = in_array('repository', $components);
 
-            $this->make(
-                $usesRepository
-                ? 'service.stub'
-                : 'service-without-repo.stub',
-                "{$paths['service']}/{$name}Service.php",
-                $paths['service'],
-                [
-                    'class' => "{$name}Service",
-                    'interface' => "{$name}ServiceInterface",
-                    'repositoryInterface' => "{$name}RepositoryInterface",
-                    'repositoryInterfaceNamespace' =>
-                        $usesRepository
-                        ? $this->ns($paths['repository_interface'] ?? '') . "\\{$name}RepositoryInterface"
-                        : '',
-                    'model' => $name,
-                    'modelNamespace' => $this->modelNamespace($paths['model'], $name),
-                    'serviceInterfaceNamespace' => $this->ns($paths['service_interface'] ?? '') . "\\{$name}ServiceInterface"
-                ]
-            );
+                $this->make(
+                    $usesRepository
+                    ? 'service.stub'
+                    : 'service-without-repo.stub',
+                    "{$paths['service']}/{$name}Service.php",
+                    $paths['service'],
+                    [
+                        'class' => "{$name}Service",
+                        'interface' => "{$name}ServiceInterface",
+                        'repositoryInterface' => "{$name}RepositoryInterface",
+                        'repositoryInterfaceNamespace' =>
+                            $usesRepository
+                            ? $this->ns($paths['repository_interface'] ?? '') . "\\{$name}RepositoryInterface"
+                            : '',
+                        'model' => $name,
+                        'modelNamespace' => $this->modelNamespace($paths['model'], $name),
+                        'serviceInterfaceNamespace' => $this->ns($paths['service_interface'] ?? '') . "\\{$name}ServiceInterface"
+                    ]
+                );
+            } catch (\Exception $e) {
+                \Illuminate\Support\Facades\Log::error("StructureKit Service Error: " . $e->getMessage());
+            }
         }
 
         /*
@@ -128,19 +148,23 @@ class StructureKitService
         |--------------------------------------------------------------------------
         */
         if (in_array('controller', $components)) {
-            $service = in_array('service', $components);
-            $this->make(
-                $service ? 'controller.stub' : 'controller-without-service.stub',
-                "{$paths['controller']}/{$name}Controller.php",
-                $paths['controller'],
-                [
-                    'model' => $name,
-                    'serviceInterface' => "{$name}ServiceInterface",
-                    'serviceInterfaceNamespace' => $service ?
-                        $this->ns($paths['service_interface'] ?? '') . "\\{$name}ServiceInterface"
-                        : '',
-                ]
-            );
+            try {
+                $service = in_array('service', $components);
+                $this->make(
+                    $service ? 'controller.stub' : 'controller-without-service.stub',
+                    "{$paths['controller']}/{$name}Controller.php",
+                    $paths['controller'],
+                    [
+                        'model' => $name,
+                        'serviceInterface' => "{$name}ServiceInterface",
+                        'serviceInterfaceNamespace' => $service ?
+                            $this->ns($paths['service_interface'] ?? '') . "\\{$name}ServiceInterface"
+                            : '',
+                    ]
+                );
+            } catch (\Exception $e) {
+                \Illuminate\Support\Facades\Log::error("StructureKit Controller Error: " . $e->getMessage());
+            }
         }
 
         /*
@@ -148,17 +172,19 @@ class StructureKitService
         | MIGRATION
         |--------------------------------------------------------------------------
         */
-        Artisan::call('make:migration', [
-            'name' => 'create_' . Str::snake(Str::plural($name)) . '_table',
-        ]);
+        try {
+            $timestamp = now()->format('Y_m_d_His');
+            $fileName ='create_' . Str::snake(Str::plural($name)) . '_table';
+            
+            Artisan::call('make:migration', [
+                'name' => $fileName,
+            ]);
 
-        // Track the last migration
-        $lastMigration = collect(glob(database_path('migrations/*.php')))
-            ->sortByDesc(fn($f) => filemtime($f))
-            ->first();
-
-        if ($lastMigration) {
+            // Track the last migration
+            $lastMigration = "database/migrations/{$timestamp}_{$fileName}.php";
             $this->generatedFiles[] = $lastMigration;
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error("StructureKit Migration Error: " . $e->getMessage());
         }
     }
 
