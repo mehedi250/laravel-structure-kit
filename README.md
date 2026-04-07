@@ -13,7 +13,7 @@
 
 ### **Laravel Structure Kit**
 
-**UI-first architecture generator for Laravel.**  
+**A powerful UI + CLI scaffolding tool for generating structured Laravel components using industry best practices.**  
 Design and preview your entire project structure — *before writing a single line of code.*
 
 <br/>
@@ -28,61 +28,42 @@ Design and preview your entire project structure — *before writing a single li
 
 <br/>
 
-[**Quick Start**](#-installation) · [**UI Generator**](#%EF%B8%8F-generate-file-from-ui) · [**CLI Generator**](#%EF%B8%8F-generate-file-via-artisan-command-optional) · [**Use Cases**](#-use-cases) · [**Contributing**](#-contributing)
-
-<br/>
 
 ---
 
 </div>
 
-## 🚀 Why Laravel Structure Kit?
 
-Most Laravel developers write code first, then realize their folder structure is a mess. **Laravel Structure Kit flips that workflow.**
+## Overview
 
-Plan your architecture visually — pick your components, preview the file tree, then generate everything in one click. No more:
+**Laravel Structure Kit** eliminates the repetitive boilerplate that comes with setting up clean architecture in Laravel. Instead of manually creating files and wiring up interfaces, simply enter a model name, select the components you need, and let the kit scaffold everything — instantly, from a clean browser UI.
 
-- ❌ Namespace collisions from misplaced files
-- ❌ Inconsistent folder conventions across your team
-- ❌ Manually wiring up service and repository boilerplate
+It supports the **Service Pattern** and **Repository Pattern** out of the box, making it easy to maintain separation of concerns and write testable, scalable code from day one.
 
-> **Architecture first. Code second.**
-
-<br/>
+---
 
 ## ✨ Features
 
-### 🖥️ Visual Architecture Generator
+- 🖥️ **Interactive UI Panel** — a browser-based form to configure and generate files with zero CLI required
+- ⚙️ **Selective Component Generation** — choose exactly which files to scaffold (Model, Controller, Service, Repository, Migration)
+- 📁 **Customizable File Paths** — override any default namespace or directory before generating
+- 🔁 **Service Pattern Support** — generates both the Interface (Contract) and Implementation class
+- 🗄️ **Repository Pattern Support** — generates both the Interface (Contract) and Eloquent implementation
+- 🚀 **One-Click Generation** — all selected files created in a single action
+- 💾 **Path Memory** — optionally remember your custom paths between sessions
 
-| Feature | Description |
-|---|---|
-| 🎨 **Visual File Builder** | Select and configure your entire app structure via an intuitive UI |
-| ☑️ **Component Checkboxes** | Toggle exactly what you need — no more, no less |
-| 🗂️ **Customizable Paths** | Override default folders per-component before generating |
-| 👁️ **Live File Preview** | See the full file tree update in real-time as you configure |
-| 🔤 **Auto Namespace** | Namespaces are resolved automatically based on your folder paths |
+---
 
-### ⌨️ CLI Generator
+## Requirements
 
-| Feature | Description |
-|---|---|
-| ⚡ **Artisan Command** | Generate files from the terminal with a single command |
-| 🏳️ **Flag-Based Selection** | Choose components using short flag letters (`m`, `c`, `s`, `r`, `t`) |
-| 🔍 **Dry Run Mode** | Preview what will be generated without touching the filesystem |
+| Dependency | Version |
+|------------|---------|
+| PHP        | `^8.1`  |
+| Laravel    | `^10.0 \| ^11.0 \| ^12.0 \| ^13.0` |
 
-### 🧩 Supported Components
+---
 
-```
-✅ Model
-✅ Controller
-✅ Service              → Interface + Implementation
-✅ Repository           → Interface + Implementation
-✅ Migration
-```
-
-<br/>
-
-## 📦 Installation
+## Installation
 
 Install the package via Composer:
 
@@ -90,72 +71,104 @@ Install the package via Composer:
 composer require mehedi250/laravel-structure-kit
 ```
 
-That's it. Laravel's **auto-discovery** will register the service provider automatically. No config publishing required.
+The package uses Laravel's auto-discovery, so no manual service provider registration is needed.
 
-> **Requires:** PHP `^8.1` · Laravel `^10.0 | ^11.0 | ^12.0 | ^13.0`
+---
 
-<br/>
+## Usage
 
-## 🖥️ Generate File From UI
+### Accessing the UI Panel
 
-### Access the UI
-
-Once installed, open your browser and navigate to:
-
-```
-http://your-app-url/structure-kit
-```
-
-For local development:
+After installation, visit the following URL in your browser:
 
 ```
 http://localhost:8000/structure-kit
 ```
 
-### UI Preview
+You'll be presented with the **Laravel Structure Kit** configuration panel.
 
-![Laravel Structure Kit UI](https://raw.githubusercontent.com/mehedi250/laravel-structure-kit/main/src/ui.png)
+---
 
-<br/>
+### Step 1 — Enter a Model Name
 
-### 🧭 Workflow
+Type your base model name in the **Base Model Name** field. This name is used to derive all generated file names.
 
-```
-  ┌─────────────────────────────────────────────────────────────────────┐
-  │                                                                     │
-  │   Step 1 ➜  Enter Model / Module name   →   e.g. "User"            │
-  │   Step 2 ➜  Select components           →   Model, Service, ...    │
-  │   Step 3 ➜  Customize folder paths      →   Override defaults       │
-  │   Step 4 ➜  Preview the file tree       →   Live update             │
-  │   Step 5 ➜  Click Generate              →   Files created! ✅       │
-  │                                                                     │
-  └─────────────────────────────────────────────────────────────────────┘
-```
+**Example:** `Product` → generates `ProductController.php`, `ProductService.php`, `ProductRepository.php`, etc.
 
-**Example output for `User` with all components selected:**
+---
+
+### Step 2 — Select Components
+
+Choose which components to generate. All options are selected by default.
+
+| Component            | Description                                                      |
+|----------------------|------------------------------------------------------------------|
+| **Model**            | Eloquent model class                                             |
+| **Controller**       | Resource controller class                                        |
+| **Service Pattern**  | Service interface (Contract) + Service implementation class      |
+| **Repository Pattern** | Repository interface (Contract) + Eloquent repository class  |
+| **Migration**        | Timestamped database migration file                              |
+
+You can deselect any component you don't need using **Deselect All** or by toggling individual checkboxes.
+
+---
+
+### Step 3 — Customize Namespaces (Optional)
+
+Expand the **Customize Namespaces** section to override default file paths before generation.
+
+| Component              | Default Path                          |
+|------------------------|---------------------------------------|
+| Model                  | `app/Models`                          |
+| Controller             | `app/Http/Controllers`                |
+| Service Interface      | `app/Services/Contracts`              |
+| Service Class          | `app/Services/Implementations`        |
+| Repository Interface   | `app/Repositories/Contracts`          |
+| Repository Class       | `app/Repositories/Eloquent`           |
+
+If you modify any path, files will be generated in your specified directory instead.
+
+---
+
+### Step 4 — Generate Files
+
+Click the **🚀 Generate Files** button to scaffold all selected components. The **Structure Output** panel on the right will display a live preview of all the files that will be created.
+
+> **Tip:** Check **Remember current path** to persist your custom namespace configuration across sessions.
+
+---
+
+## Example Output
+
+Running the generator with the model name `User` and all components selected produces the following file structure:
 
 ```
 app/
- ├── Models/
- │   └── User.php
- ├── Http/
- │   └── Controllers/
- │       └── UserController.php
- ├── Services/
- │   ├── Contracts/
- │   │   └── UserServiceInterface.php
- │   └── Implementations/
- │       └── UserService.php
- └── Repositories/
-     ├── Contracts/
-     │   └── UserRepositoryInterface.php
-     └── Eloquent/
-         └── UserRepository.php
-
+├── Models/
+│   └── User.php
+├── Http/
+│   └── Controllers/
+│       └── UserController.php
+├── Services/
+│   ├── Contracts/
+│   │   └── UserServiceInterface.php
+│   └── Implementations/
+│       └── UserService.php
+└── Repositories/
+    ├── Contracts/
+    │   └── UserRepositoryInterface.php
+    └── Eloquent/
+        └── UserRepository.php
 database/
- └── migrations/
-     └── xxxx_xx_xx_create_users_table.php
+└── migrations/
+    └── xxxx_xx_xx_create_users_table.php
 ```
+
+---
+
+### UI Preview
+
+![Laravel Structure Kit UI](https://raw.githubusercontent.com/mehedi250/laravel-structure-kit/main/src/ui.png)
 
 <br/>
 
