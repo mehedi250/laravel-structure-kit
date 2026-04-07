@@ -87,6 +87,7 @@ http://localhost:8000/structure-kit
 
 You'll be presented with the **Laravel Structure Kit** configuration panel.
 
+![Laravel Structure Kit UI](https://raw.githubusercontent.com/mehedi250/laravel-structure-kit/main/src/ui.png)
 ---
 
 ### Step 1 — Enter a Model Name
@@ -165,10 +166,6 @@ database/
 ```
 
 ---
-
-### UI Preview
-
-![Laravel Structure Kit UI](https://raw.githubusercontent.com/mehedi250/laravel-structure-kit/main/src/ui.png)
 
 <br/>
 
