@@ -1,10 +1,9 @@
 {
     "name": "mehedi250/laravel-structure-kit",
-    "description": "A powerful UI + CLI scaffolding tool for Laravel — instantly generate Models, Controllers, Migrations, and Service & Repository pattern boilerplate with customizable file paths.",
+    "description": "Laravel scaffolding package with a browser UI and Artisan command — generates Model, Controller, Migration, Service Pattern (interface + implementation), and Repository Pattern (interface + implementation) with correct namespaces.",
     "version": "v0.1.6",
     "type": "library",
     "license": "MIT",
-    "readme": "README.md",
 
     "keywords": [
         "laravel",
@@ -47,8 +46,16 @@
     "support": {
         "issues": "https://github.com/mehedi250/laravel-structure-kit/issues",
         "source": "https://github.com/mehedi250/laravel-structure-kit",
-        "docs": "https://github.com/mehedi250/laravel-structure-kit#readme"
+        "docs": "https://github.com/mehedi250/laravel-structure-kit#readme",
+        "security": "https://github.com/mehedi250/laravel-structure-kit/issues"
     },
+
+    "funding": [
+        {
+            "type": "github",
+            "url": "https://github.com/sponsors/mehedi250"
+        }
+    ],
 
     "require": {
         "php": "^8.1",
