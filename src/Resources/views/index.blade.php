@@ -13,7 +13,6 @@
             --primary-dark: #ea580c;
             --secondary: #8b5cf6; 
             --success: #22c55e;
-            --bg-gradient: linear-gradient(135deg, #f8fafc 0%, #eff6ff 100%);
             --surface: rgba(255, 255, 255, 0.9);
             --text-main: #1e293b;
             --text-light: #64748b;
@@ -341,13 +340,13 @@ font-size: 2.5rem;
                         <button type="submit" class="submit-btn">🚀 Generate Files</button>
 
                         <div id="hidden-inputs" style="display:none;">
-                            <input type="checkbox" name="components[]" value="model" id="real-model">
-                            <input type="checkbox" name="components[]" value="controller" id="real-controller">
-                            <input type="checkbox" name="components[]" value="migration" id="real-migration">
-                            <input type="checkbox" name="components[]" value="service" id="real-service">
-                            <input type="checkbox" name="components[]" value="service_interface" id="real-service_interface">
-                            <input type="checkbox" name="components[]" value="repository" id="real-repository">
-                            <input type="checkbox" name="components[]" value="repository_interface" id="real-repository_interface">
+                            <input type="checkbox" name="components[]" value="model" id="real-model" checked>
+                            <input type="checkbox" name="components[]" value="controller" id="real-controller" checked>
+                            <input type="checkbox" name="components[]" value="migration" id="real-migration" checked>
+                            <input type="checkbox" name="components[]" value="service" id="real-service" checked>
+                            <input type="checkbox" name="components[]" value="service_interface" id="real-service_interface" checked>
+                            <input type="checkbox" name="components[]" value="repository" id="real-repository" checked>
+                            <input type="checkbox" name="components[]" value="repository_interface" id="real-repository_interface" checked>
                         </div>
                     </div>
                 </div>
@@ -472,10 +471,15 @@ font-size: 2.5rem;
             generateTree(name);
         }
 
+        function toSnakePlural(str) {
+            const snake = str.replace(/([A-Z])/g, m => '_' + m.toLowerCase()).replace(/^_/, '');
+            return snake + 's';
+        }
+
         function generateTree(name) {
             const data = new FormData(form);
             let tree = '';
-            
+
             const map = {
                 model: name + '.php',
                 controller: name + 'Controller.php',
@@ -486,7 +490,7 @@ font-size: 2.5rem;
             };
 
             const selectedComponents = data.getAll('components[]');
-            
+
             for (const [key, file] of Object.entries(map)) {
                 if (selectedComponents.includes(key)) {
                     const path = data.get(`paths[${key}]`);
@@ -496,7 +500,7 @@ font-size: 2.5rem;
 
             if (selectedComponents.includes('migration')) {
                 const date = new Date().toISOString().slice(0,10).replace(/-/g,'_');
-                tree += `+ database/migrations/${date}_000000_create_${name.toLowerCase()}_table.php\n`;
+                tree += `+ database/migrations/${date}_xxxxxx_create_${toSnakePlural(name)}_table.php\n`;
             }
 
             preview.textContent = tree || '// No components selected';
@@ -567,11 +571,37 @@ font-size: 2.5rem;
         // Task 1: Fetch API Form Submission
         form.addEventListener('submit', function(e) {
             e.preventDefault();
-            
+
             const submitBtn = form.querySelector('.submit-btn');
             const originalBtnText = submitBtn.innerHTML;
             submitBtn.innerHTML = '🚀 Generating...';
             submitBtn.disabled = true;
+
+            // Path validation — every selected component path must start with "app/"
+            const selectedComponents = Array.from(document.querySelectorAll('#hidden-inputs input:checked')).map(i => i.value);
+            const pathComponentMap = {
+                model:                'Model',
+                controller:           'Controller',
+                service:              'Service Class',
+                service_interface:    'Service Interface',
+                repository:           'Repository Class',
+                repository_interface: 'Repository Interface',
+            };
+            const invalidPaths = [];
+            for (const [key, label] of Object.entries(pathComponentMap)) {
+                if (selectedComponents.includes(key)) {
+                    const input = document.querySelector(`input[name="paths[${key}]"]`);
+                    if (input && !input.value.trim().startsWith('app/')) {
+                        invalidPaths.push(label);
+                    }
+                }
+            }
+            if (invalidPaths.length > 0) {
+                showMessage('All paths must start with "app/": ' + invalidPaths.join(', '), 'error');
+                submitBtn.innerHTML = originalBtnText;
+                submitBtn.disabled = false;
+                return;
+            }
 
             const data = new FormData(form);
             

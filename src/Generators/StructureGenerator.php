@@ -20,10 +20,10 @@ class StructureGenerator
     /**
      * Create a file with content and safe permissions
      */
-    public function createFile(string $path, string $content): bool
+    public function createFile(string $path, string $content, bool $force = false): bool
     {
-        if (File::exists($path)) {
-            return false; // prevent overwriting
+        if (File::exists($path) && !$force) {
+            return false;
         }
 
         $this->ensureDirectory(dirname($path));
@@ -40,7 +40,7 @@ class StructureGenerator
      * @param string $targetPath Full path to generate the file
      * @param array $replacements Key-value replacements for placeholders
      */
-    public function generateFromStub(string $stubName, string $targetPath, array $replacements = []): string
+    public function generateFromStub(string $stubName, string $targetPath, array $replacements = [], bool $force = false): bool
     {
         $stubPath = __DIR__ . '/../stubs/' . $stubName;
 
@@ -54,16 +54,7 @@ class StructureGenerator
             $content = preg_replace('/\{\{\s*' . preg_quote($key, '/') . '\s*\}\}/', $value, $content);
         }
 
-        // Detect unreplaced placeholders
-        // if (preg_match('/{{\s*\w+\s*}}/', $content)) {
-        //     dd($replacements);
-
-        //     throw new \Exception("Unreplaced placeholders found in {$stubName}");
-        // }
-
-        $this->createFile($targetPath, $content);
-
-        return $targetPath;
+        return $this->createFile($targetPath, $content, $force);
     }
 
     /**
@@ -71,18 +62,9 @@ class StructureGenerator
      */
     private function setPermissionsRecursive(string $path): void
     {
-        $hostUser = getenv('HOST_USER') ?: 'www-data';
-        $hostGroup = getenv('HOST_GROUP') ?: 'www-data';
-
-        if (is_dir($path)) {
-            chmod($path, 0775); // folder: rwxrwxr-x
-        } else {
-            chmod($path, 0664); // file: rw-rw-r--
+        if (PHP_OS_FAMILY !== 'Windows') {
+            chmod($path, is_dir($path) ? 0775 : 0664);
         }
-
-        // Avoiding explicit chown/chgrp to prevent permission denied errors on standard developer machines
-        // @chown($path, $hostUser);
-        // @chgrp($path, $hostGroup);
 
         if (is_dir($path)) {
             $items = scandir($path);

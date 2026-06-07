@@ -35,7 +35,6 @@ class StructureKitCommand extends Command
         $name = Str::studly($this->argument('name'));
         $flags = strtolower($this->argument('flags') ?? '');
 
-        // Parse components from flags + explicit options
         $components = $this->parseFlags($flags);
 
         if ($this->option('model'))
@@ -60,7 +59,6 @@ class StructureKitCommand extends Command
             return self::FAILURE;
         }
 
-        // Default CLI paths
         $paths = [
             'model' => 'app/Models',
             'controller' => 'app/Http/Controllers',
@@ -78,46 +76,47 @@ class StructureKitCommand extends Command
             'Repositories' => 'magenta',
             'migrations' => 'red',
         ];
-        if (!$this->option('dry-run')) {
-            $this->service->generateFromUI([
-                'name' => $name,
-                'components' => $components,
-                'paths' => $paths,
-                'extra' => [
-                    'dry-run' => $this->option('dry-run'),
-                    'force' => $this->option('force'),
-                ],
-            ]);
-            $generated = $this->service->generatedFiles;
 
-            $this->info("\n📂 Generated Structure:\n");
-
-            $tree = new TreePrinter();
-            $tree->printFiles($generated, $highlight);
-        } else {
+        if ($this->option('dry-run')) {
             $generated = [];
-            $this->info("\n📂 Possible file paths:\n");
-            if (isset($components['model']))
-                $generated[] = $paths['model'] . "/" . $name . ".php";
-            if (isset($components['controller']))
-                $generated[] = $paths['controller'] . "/" . $name . "Controller.php";
-            if (isset($components['service']))
-                $generated[] = $paths['service'] . "/" . $name . "Service.php";
-            if (isset($components['service_interface']))
-                $generated[] = $paths['service_interface'] . "/" . $name . "ServiceInterface.php";
-            if (isset($components['repository']))
-                $generated[] = $paths['repository'] . "/" . $name . "Repository.php";
-            if (isset($components['repository_interface']))
-                $generated[] = $paths['repository_interface'] . "/" . $name . "RepositoryInterface.php";
-            if (isset($components['migration'])) {
+            if (in_array('model', $components))
+                $generated[] = $paths['model'] . "/{$name}.php";
+            if (in_array('controller', $components))
+                $generated[] = $paths['controller'] . "/{$name}Controller.php";
+            if (in_array('service', $components))
+                $generated[] = $paths['service'] . "/{$name}Service.php";
+            if (in_array('service_interface', $components))
+                $generated[] = $paths['service_interface'] . "/{$name}ServiceInterface.php";
+            if (in_array('repository', $components))
+                $generated[] = $paths['repository'] . "/{$name}Repository.php";
+            if (in_array('repository_interface', $components))
+                $generated[] = $paths['repository_interface'] . "/{$name}RepositoryInterface.php";
+            if (in_array('migration', $components)) {
                 $timestamp = now()->format('Y_m_d_His');
-                $generated[] = "database/migrations/{$timestamp}_create_" . strtolower($name) . "_table.php";
+                $generated[] = "database/migrations/{$timestamp}_create_" . Str::snake(Str::plural($name)) . "_table.php";
             }
 
-            $this->info("\n📂 Possible file paths:\n");
+            $this->info("\n📂 Possible file paths (dry-run):\n");
             $tree = new TreePrinter();
             $tree->printFiles($generated, $highlight);
+
+            return self::SUCCESS;
         }
+
+        $this->service->generateFromUI([
+            'name' => $name,
+            'components' => $components,
+            'paths' => $paths,
+            'extra' => [
+                'force' => $this->option('force'),
+            ],
+        ]);
+
+        $generated = $this->service->generatedFiles;
+
+        $this->info("\n📂 Generated Structure:\n");
+        $tree = new TreePrinter();
+        $tree->printFiles($generated, $highlight);
 
         $this->info('✅ Structure generated successfully!');
         $this->info('Generated: ' . implode(', ', $components));
@@ -143,7 +142,6 @@ class StructureKitCommand extends Command
 
             $components[] = $map[$flag];
 
-            // Automatically add interfaces
             if ($flag === 's')
                 $components[] = 'service_interface';
             if ($flag === 'r')

@@ -3,22 +3,22 @@
 namespace {{ namespace }};
 
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
+use Illuminate\Routing\Controller;
 use {{ serviceInterfaceNamespace }};
 
 class {{ model }}Controller extends Controller
 {
     protected $service;
-    public function __construct(
-        {{ serviceInterface }} $service
-    ) {
+
+    public function __construct({{ serviceInterface }} $service)
+    {
         $this->service = $service;
     }
 
     public function index()
     {
         return response()->json([
-            'data' => $this->service->getAllDataByWhereCondition([])
+            'data' => $this->service->getAll()
         ]);
     }
 
@@ -33,9 +33,7 @@ class {{ model }}Controller extends Controller
 
     public function show(int $id)
     {
-        $data = $this->service->getSingleDataByWhereCondition([
-            'id' => $id
-        ]);
+        $data = $this->service->find(['id' => $id]);
 
         return response()->json([
             'data' => $data
@@ -44,10 +42,7 @@ class {{ model }}Controller extends Controller
 
     public function update(Request $request, int $id)
     {
-        $data = $this->service->updateByWhereCondition(
-            ['id' => $id],
-            $request->all()
-        );
+        $data = $this->service->update(['id' => $id], $request->all());
 
         return response()->json([
             'data' => $data
@@ -56,9 +51,7 @@ class {{ model }}Controller extends Controller
 
     public function destroy(int $id)
     {
-        $data = $this->service->deleteByQuery([
-            'id' => $id
-        ]);
+        $data = $this->service->delete(['id' => $id]);
 
         return response()->json([
             'data' => $data

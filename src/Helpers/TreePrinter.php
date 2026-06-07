@@ -8,9 +8,9 @@ class TreePrinter
 {
     protected $output;
 
-    public function __construct(ConsoleOutput $output)
+    public function __construct()
     {
-        $this->output = $output;
+        $this->output = new ConsoleOutput();
     }
 
     /**
@@ -72,9 +72,7 @@ class TreePrinter
         foreach ($keys as $index => $key) {
             $isLast = $index === $lastIndex;
 
-            $connector = $isRoot
-                ? '├── '
-                : ($isLast ? '└── ' : '├── ');
+            $connector = $isLast ? '└── ' : '├── ';
 
             $display = $this->colorize($key, $highlightMap);
 

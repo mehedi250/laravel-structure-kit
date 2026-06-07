@@ -9,6 +9,8 @@ use StructureKit\Generators\StructureGenerator;
 
 class StructureKitServiceProvider extends ServiceProvider
 {
+    public const VERSION = 'v0.1.5';
+
     /**
      * Register bindings
      */

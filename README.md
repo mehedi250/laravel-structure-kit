@@ -13,8 +13,8 @@
 
 ### **Laravel Structure Kit**
 
-**A powerful UI + CLI scaffolding tool for generating structured Laravel components using industry best practices.**  
-Design and preview your entire project structure — *before writing a single line of code.*
+**A browser-based scaffolding panel for Laravel — generate Models, Controllers, Services, Repositories, and Migrations in one click.**  
+No terminal required. Open the UI, pick your components, hit Generate.
 
 <br/>
 
@@ -28,7 +28,6 @@ Design and preview your entire project structure — *before writing a single li
 
 <br/>
 
-
 ---
 
 </div>
@@ -36,21 +35,9 @@ Design and preview your entire project structure — *before writing a single li
 
 ## Overview
 
-**Laravel Structure Kit** eliminates the repetitive boilerplate that comes with setting up clean architecture in Laravel. Instead of manually creating files and wiring up interfaces, simply enter a model name, select the components you need, and let the kit scaffold everything — instantly, from a clean browser UI.
+**Laravel Structure Kit** gives you a clean browser panel for scaffolding Laravel file structures. Enter a model name, check the components you want, optionally adjust directory paths, and click **Generate Files** — all selected files are created instantly with the correct namespaces.
 
-It supports the **Service Pattern** and **Repository Pattern** out of the box, making it easy to maintain separation of concerns and write testable, scalable code from day one.
-
----
-
-## ✨ Features
-
-- 🖥️ **Interactive UI Panel** — a browser-based form to configure and generate files with zero CLI required
-- ⚙️ **Selective Component Generation** — choose exactly which files to scaffold (Model, Controller, Service, Repository, Migration)
-- 📁 **Customizable File Paths** — override any default namespace or directory before generating
-- 🔁 **Service Pattern Support** — generates both the Interface (Contract) and Implementation class
-- 🗄️ **Repository Pattern Support** — generates both the Interface (Contract) and Eloquent implementation
-- 🚀 **One-Click Generation** — all selected files created in a single action
-- 💾 **Path Memory** — optionally remember your custom paths between sessions
+It supports the **Service Pattern** and **Repository Pattern** out of the box, generating both the interface (contract) and the implementation class for each.
 
 ---
 
@@ -65,115 +52,144 @@ It supports the **Service Pattern** and **Repository Pattern** out of the box, m
 
 ## Installation
 
-Install the package via Composer:
-
 ```bash
 composer require mehedi250/laravel-structure-kit
 ```
 
-The package uses Laravel's auto-discovery, so no manual service provider registration is needed.
+The package registers itself automatically via Laravel's package auto-discovery. No config file or service provider registration required.
 
 ---
 
-## Usage
+## Using the UI Panel
 
-### Accessing the UI Panel
+### Open the panel
 
-After installation, visit the following URL in your browser:
+Start your local server and visit:
 
 ```
 http://localhost:8000/structure-kit
 ```
 
-You'll be presented with the **Laravel Structure Kit** configuration panel.
+> The panel is only accessible in `local` environment. It returns a `403` in any other environment.
 
 ![Laravel Structure Kit UI](https://raw.githubusercontent.com/mehedi250/laravel-structure-kit/main/src/ui.png)
----
-
-### Step 1 — Enter a Model Name
-
-Type your base model name in the **Base Model Name** field. This name is used to derive all generated file names.
-
-**Example:** `Product` → generates `ProductController.php`, `ProductService.php`, `ProductRepository.php`, etc.
 
 ---
 
-### Step 2 — Select Components
+### Step 1 — Enter a model name
 
-Choose which components to generate. All options are selected by default.
+Type your base model name in the **Base Model Name** field at the top of the Configuration panel.
 
-| Component            | Description                                                      |
-|----------------------|------------------------------------------------------------------|
-| **Model**            | Eloquent model class                                             |
-| **Controller**       | Resource controller class                                        |
-| **Service Pattern**  | Service interface (Contract) + Service implementation class      |
-| **Repository Pattern** | Repository interface (Contract) + Eloquent repository class  |
-| **Migration**        | Timestamped database migration file                              |
+```
+Product
+```
 
-You can deselect any component you don't need using **Deselect All** or by toggling individual checkboxes.
+Every generated filename is derived from this name:
 
----
-
-### Step 3 — Customize Namespaces (Optional)
-
-Expand the **Customize Namespaces** section to override default file paths before generation.
-
-| Component              | Default Path                          |
-|------------------------|---------------------------------------|
-| Model                  | `app/Models`                          |
-| Controller             | `app/Http/Controllers`                |
-| Service Interface      | `app/Services/Contracts`              |
-| Service Class          | `app/Services/Implementations`        |
-| Repository Interface   | `app/Repositories/Contracts`          |
-| Repository Class       | `app/Repositories/Eloquent`           |
-
-If you modify any path, files will be generated in your specified directory instead.
+| Generated file | Derived name |
+|---|---|
+| `Product.php` | Model |
+| `ProductController.php` | Controller |
+| `ProductServiceInterface.php` | Service Interface |
+| `ProductService.php` | Service Class |
+| `ProductRepositoryInterface.php` | Repository Interface |
+| `ProductRepository.php` | Repository Class |
+| `xxxx_xx_xx_create_products_table.php` | Migration |
 
 ---
 
-### Step 4 — Generate Files
+### Step 2 — Select components
 
-Click the **🚀 Generate Files** button to scaffold all selected components. The **Structure Output** panel on the right will display a live preview of all the files that will be created.
+All five components are selected by default. Uncheck anything you don't need. Use **Deselect All / Select All** to toggle everything at once.
 
-> **Tip:** Check **Remember current path** to persist your custom namespace configuration across sessions.
+| Component | What gets generated |
+|---|---|
+| **Model** | Eloquent model class |
+| **Controller** | Resource controller wired to the service interface |
+| **Migration** | Timestamped `create_table` migration |
+| **Service Pattern** | `ProductServiceInterface.php` + `ProductService.php` |
+| **Repository Pattern** | `ProductRepositoryInterface.php` + `ProductRepository.php` |
+
+Selecting **Service Pattern** without **Repository Pattern** generates a service that works directly with the model — no repository dependency.
 
 ---
 
-## Example Output
+### Step 3 — Review and customize paths (optional)
 
-Running the generator with the model name `User` and all components selected produces the following file structure:
+The right panel shows **Customize Namespaces** — one editable path field per selected component. The defaults match standard Laravel conventions:
+
+| Component | Default path |
+|---|---|
+| Model | `app/Models` |
+| Controller | `app/Http/Controllers` |
+| Service Interface | `app/Services/Contracts` |
+| Service Class | `app/Services/Implementations` |
+| Repository Interface | `app/Repositories/Contracts` |
+| Repository Class | `app/Repositories/Eloquent` |
+
+You can change any path before generating. All paths must start with `app/` — the UI blocks submission if a path does not.
+
+**Refresh Path** resets all fields back to the defaults above.
+
+**Remember current path** — tick this checkbox to save your custom paths in the browser. The next time you open the panel, your paths are pre-filled automatically.
+
+---
+
+### Step 4 — Preview the file tree
+
+The **Structure Output** terminal on the right updates live as you type the model name, check components, or edit paths. It shows exactly what will be written to disk before you commit to generating.
+
+```
++ app/Models/Product.php
++ app/Http/Controllers/ProductController.php
++ app/Services/Contracts/ProductServiceInterface.php
++ app/Services/Implementations/ProductService.php
++ app/Repositories/Contracts/ProductRepositoryInterface.php
++ app/Repositories/Eloquent/ProductRepository.php
++ database/migrations/2026_06_07_xxxxxx_create_products_table.php
+```
+
+---
+
+### Step 5 — Generate
+
+Click **🚀 Generate Files**.
+
+The form submits via Fetch API — no page reload. A success or error message appears at the top of the page. Files that already exist on disk are skipped (not overwritten).
+
+---
+
+## Generated file structure
+
+Running the generator with model name `Product` and all components selected produces:
 
 ```
 app/
 ├── Models/
-│   └── User.php
+│   └── Product.php
 ├── Http/
 │   └── Controllers/
-│       └── UserController.php
+│       └── ProductController.php
 ├── Services/
 │   ├── Contracts/
-│   │   └── UserServiceInterface.php
+│   │   └── ProductServiceInterface.php
 │   └── Implementations/
-│       └── UserService.php
+│       └── ProductService.php
 └── Repositories/
     ├── Contracts/
-    │   └── UserRepositoryInterface.php
+    │   └── ProductRepositoryInterface.php
     └── Eloquent/
-        └── UserRepository.php
+        └── ProductRepository.php
 database/
 └── migrations/
-    └── xxxx_xx_xx_create_users_table.php
+    └── 2026_06_07_xxxxxx_create_products_table.php
 ```
 
 ---
 
-<br/>
+## Artisan Command (CLI alternative)
 
-## ⚙️ Generate File Via Artisan Command (Optional)
-
-Prefer the terminal? The Artisan command gives you the same power without leaving your editor.
-
-### Syntax
+Prefer the terminal? The Artisan command generates the same files without the browser.
 
 ```bash
 php artisan structure-kit {ModelName} {flags}
@@ -181,100 +197,70 @@ php artisan structure-kit {ModelName} {flags}
 
 ### Flags
 
-| Flag | Component | Generated Files |
-|:----:|-----------|-----------------|
-| `m` | Model | `Models/User.php` |
-| `c` | Controller | `Http/Controllers/UserController.php` |
-| `s` | Service | `Services/Contracts/UserServiceInterface.php`<br>`Services/Implementations/UserService.php` |
-| `r` | Repository | `Repositories/Contracts/UserRepositoryInterface.php`<br>`Repositories/Eloquent/UserRepository.php` |
-| `t` | Migration | `database/migrations/xxxx_create_users_table.php` |
+| Flag | Component |
+|:----:|-----------|
+| `m` | Model |
+| `c` | Controller |
+| `s` | Service + Service Interface |
+| `r` | Repository + Repository Interface |
+| `t` | Migration |
 
 ### Examples
 
-**Generate everything:**
 ```bash
-php artisan structure-kit User mcsrt
-```
+# Generate everything
+php artisan structure-kit Product mcsrt
 
-**Only Service + Repository (clean architecture layer):**
-```bash
-php artisan structure-kit User sr
-```
+# Service + Repository only
+php artisan structure-kit Product sr
 
-**Model + Controller only:**
-```bash
+# Model + Controller only
 php artisan structure-kit Product mc
+
+# Preview without writing files
+php artisan structure-kit Product mcsrt --dry-run
 ```
 
-**Preview without generating (dry run):**
-```bash
-php artisan structure-kit User mcsr --dry-run
-```
+---
 
-<br/>
+## Use Cases
 
-## 🧪 Use Cases
+- **New projects** — establish a consistent structure from the first model
+- **Team environments** — everyone generates files the same way, same paths, same conventions
+- **Rapid prototyping** — scaffold a full feature in seconds, then fill in the logic
+- **Learning clean architecture** — see how Interfaces, Services, and Repositories connect before writing a line
 
-Laravel Structure Kit fits naturally into a wide range of scenarios:
+---
 
-- 🏗️ **Starting a new Laravel project** — establish a consistent structure from day one
-- 🔁 **Refactoring existing apps** — preview clean architecture before touching production code
-- 👥 **Team environments** — enforce shared conventions so everyone generates files the same way
-- ⚡ **Rapid prototyping** — scaffold a full feature's file structure in seconds
-- 🎓 **Learning clean architecture** — see how Interfaces, Services, and Repositories connect
+## Contributing
 
-<br/>
-
-## 🤝 Contributing
-
-All contributions are welcome! Whether it's a bug fix, new feature, or documentation improvement.
+All contributions are welcome — bug fixes, new features, documentation improvements.
 
 ```bash
-# 1. Fork the repository on GitHub
-# 2. Clone your fork
+# Fork on GitHub, then:
 git clone https://github.com/YOUR_USERNAME/laravel-structure-kit.git
-
-# 3. Create a feature branch
-git checkout -b feature/your-amazing-feature
-
-# 4. Commit your changes
-git commit -m "feat: add your amazing feature"
-
-# 5. Push and open a Pull Request
-git push origin feature/your-amazing-feature
+git checkout -b feature/your-feature
+git commit -m "feat: describe your change"
+git push origin feature/your-feature
+# Open a Pull Request
 ```
 
-🔗 **Repository:** [github.com/mehedi250/laravel-structure-kit](https://github.com/mehedi250/laravel-structure-kit)
+Repository: [github.com/mehedi250/laravel-structure-kit](https://github.com/mehedi250/laravel-structure-kit)
 
-<br/>
+---
 
-## 📊 Project Stats
-
-<div align="center">
-
-[![Stars](https://img.shields.io/github/stars/mehedi250/laravel-structure-kit?style=social)](https://github.com/mehedi250/laravel-structure-kit/stargazers)
-[![Forks](https://img.shields.io/github/forks/mehedi250/laravel-structure-kit?style=social)](https://github.com/mehedi250/laravel-structure-kit/network/members)
-[![Watchers](https://img.shields.io/github/watchers/mehedi250/laravel-structure-kit?style=social)](https://github.com/mehedi250/laravel-structure-kit/watchers)
-[![Packagist](https://img.shields.io/packagist/v/mehedi250/laravel-structure-kit?label=packagist&color=orange)](https://packagist.org/packages/mehedi250/laravel-structure-kit)
-
-</div>
-
-<br/>
-
-## 📜 License
+## License
 
 Released under the **MIT License**.  
 Copyright © 2026 **Md. Mehedi Hasan Shawon**
 
 See the [LICENSE](LICENSE) file for full details.
 
-<br/>
-
 ---
 
 <div align="center">
 
-**If this package saved you time, please consider giving it a ⭐ on GitHub!**
+**If this package saved you time, consider giving it a ⭐ on GitHub.**
 
 Made with ❤️ for the Laravel community · [Report a Bug](https://github.com/mehedi250/laravel-structure-kit/issues) · [Request a Feature](https://github.com/mehedi250/laravel-structure-kit/issues)
 

@@ -43,22 +43,22 @@ class {{ class }} implements {{ interface }}
 
     public function deleteByQuery(array $where): bool
     {
-        return $this->model->where($where)->delete();
+        return (bool) $this->model->where($where)->delete();
     }
 
     public function deleteByWhereIn(array $where, string $whereInColumn, array $whereInData): bool
     {
-        return $this->model->where($where)->whereIn($whereInColumn, $whereInData)->delete();
+        return (bool) $this->model->where($where)->whereIn($whereInColumn, $whereInData)->delete();
     }
 
     public function bulkDelete(array $ids): bool
     {
-        return $this->model->whereIn('id', $ids)->delete();
+        return (bool) $this->model->whereIn('id', $ids)->delete();
     }
 
     public function updateByWhereCondition(array $where, array $params): bool
     {
-        return $this->model->where($where)->update($params);
+        return (bool) $this->model->where($where)->update($params);
     }
 
     public function getDataWithWhereIn(array $where, string $whereInColumn, array $whereInData, array $columns = ['*']): Collection
